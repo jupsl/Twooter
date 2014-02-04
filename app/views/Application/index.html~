@@ -1,0 +1,25 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{form @Application.create(),id:'create_twoot', enctype:'multipart/form-data'}
+<!-- el name tiene que ser igual que el nombre del parametro del metodo-->	
+<input type="text" id="cajita" name="mensaje"/>
+<input type="submit" value="Twoot!"/>
+#{/form}
+<h1>Twoots Anteriores</h1>
+<ul>
+	<!--twoots viene del controlador index es una variable de ese metodo-->
+	#{list twoots}
+		<li>${_.mensaje} (${_.fechaCreacion.since()})</li>
+	#{/list}
+</ul>
+<script>
+	$('form').submit(function(){
+		var createAction = #{jsAction @Application.create(':twoot') /}
+		//data es el valor retornado por la funcion
+		$.post(createAction({twoot: $('#cajita').val()}),funtion(data){
+			$('ul').append(data);
+			$('#cajita').val("");
+		});
+		return false;
+	});
+</script>
